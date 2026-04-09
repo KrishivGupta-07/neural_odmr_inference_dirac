@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════════
 
-DATA_DIR = Path("/kaggle/input/odmr-data/data")
+DATA_DIR = Path("/kaggle/input/datasets/krishivgupta123123/diraclab/data")
 CKPT_DIR = Path("/kaggle/working/checkpoints")
 PLOT_DIR = Path("/kaggle/working/plots")
 
