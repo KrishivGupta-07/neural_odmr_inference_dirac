@@ -1,0 +1,12 @@
+{
+  "target_mean": 4.8513,
+  "target_std": 2.3309,
+  "preprocessing": "invert_smooth_zscore",
+  "sigma": 4,
+  "min_snr_per_dip": 5.0,
+  "architecture": "ResNet1D_base_ch32",
+  "params": 186529,
+  "test_mae_ut": 561.3,
+  "test_r2": 0.8551,
+  "notes": "Trained on snr_per_dip>=5 samples only. Raw spectra inverted (dips->peaks), gaussian smoothed sigma=4, per-sample z-scored. Targets z-scored with train mean/std. Failure regimes: snr_per_dip<5 (undetectable), B>8mT (dips exit window)."
+}
