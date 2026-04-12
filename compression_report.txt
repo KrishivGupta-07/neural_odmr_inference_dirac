@@ -1,0 +1,77 @@
+======================================================================
+  PART 2 — COMPRESSION SCIENCE: FULL BENCHMARK REPORT
+======================================================================
+
+BENCHMARK TABLE
+======================================================================
+  Variant                       MAE(μT)    MaxErr(μT)       R²   Params   Size(KB)  Latency(ms)  Score S
+  ------------------------------------------------------------------------------------------------------
+  Baseline (FP32 PyTorch)         561.3             —   0.8551   186529      764.9        1.990     1.00
+  V1 PTQ INT8                     563.0        6628.8   0.8484   186529      712.4        0.442     4.82
+  V2 Distilled Student            571.4        6726.0   0.8462    12073       53.2        0.087   322.35
+  V3 Student+INT8                 571.7        6721.3   0.8462    12073       56.2        0.103   257.98
+  V4 Pruned 70%                   561.6        7140.3   0.8486    57303      732.0        0.477     4.36
+
+
+COMPRESSION FINDINGS
+======================================================================
+  Best compression score:    V2 Distilled Student  S=322
+  Best size reduction:       V2  764.9→53.2 KB  (14.4x)
+  Best latency reduction:    V2  1.99→0.087 ms (22.9x)
+  MAE degradation (best):    V2  561.3→571.4 μT (+1.8%)
+
+  Pareto-optimal variants:   Baseline, V1, V2, V4
+  Recommended deployment:    V2 Distilled Student
+
+
+FORENSICS FINDINGS
+======================================================================
+  Inv 3 — Error distribution: compression preserves error shape,
+           no new failure modes. P95: Baseline=1847μT Student=1887μT
+  Inv 4 — Quant noise: Gaussian white noise (mean=1.74μT std=5.30μT),
+           zero correlation with B-field or SNR. INT8 is safe.
+  Inv 5B — Distillation: saliency similarity=0.967, teacher provides
+            label smoothing not feature transfer. Δ MAE = 40μT (6.3%)
+
+
+COMPRESSION SCORE EXPLANATION
+======================================================================
+
+  Why V2 >> V3 (Student+INT8):
+    Quantizing the tiny student adds metadata overhead (+3 KB) and
+    doesn't reduce latency further because the linear layers are already
+    too small to benefit from INT8 MatMul. Architecture reduction
+    dominates quantization at this scale.
+
+  Why V4 (Pruning) scores only 4.4:
+    Unstructured magnitude pruning creates zero weights but they remain
+    stored in the ONNX graph. No size reduction, modest latency gain
+    from ORT skipping near-zero multiplications. Structured pruning
+    or sparse tensor formats would be required to realize size savings.
+
+  Why V1 (PTQ INT8) scores only 4.8:
+    Dynamic quantization only affects MatMul/Gemm ops (the linear head).
+    Conv weights — 95% of parameters — remain FP32 in ONNX dynamic quant.
+    Score comes from ORT graph optimization, not quantization itself.
+
+
+OUTPUT FILE CHECKLIST
+======================================================================
+  [✓] benchmark.csv
+  [✓] onnx/baseline_fp32.onnx
+  [✓] onnx/v1_ptq_int8.onnx
+  [✓] onnx/v2_student_fp32.onnx
+  [✓] onnx/v3_student_int8.onnx
+  [✓] onnx/v4_pruned70.onnx
+  [✓] checkpoints/v2_student_best.pt
+  [✓] checkpoints/v4_pruned70_best.pt
+  [✓] checkpoints/v5b_scratch_student.pt
+  [✓] plots/pareto_mae_vs_size.png
+  [✓] plots/pareto_mae_vs_latency.png
+  [✓] plots/compression_scores.png
+  [✓] plots/forensics_error_cdf.png
+  [✓] plots/forensics_error_vs_b.png
+  [✓] plots/forensics_quant_noise.png
+  [✓] plots/forensics_distillation_saliency.png
+
+  All 16 files present.
