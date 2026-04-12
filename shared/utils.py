@@ -11,7 +11,8 @@ BASELINE = dict(mae_ut=561.3, size_kb=764.9, latency_ms=1.990, params=186529)
 TARGET_MEAN = 4.8513
 TARGET_STD = 2.3309
 
-BENCHMARK_CSV = Path(__file__).parent / "benchmark.csv"
+REPO_ROOT = Path(__file__).parent.parent
+BENCHMARK_CSV = REPO_ROOT / "part2" / "benchmark_table.csv"
 _CSV_FIELDS = [
     "tag", "mae_ut", "max_err_ut", "r2", "params", "size_kb",
     "latency_ms", "score", "notes",
@@ -67,7 +68,7 @@ def score_s(mae_ut, size_kb, latency_ms):
 
 
 def write_benchmark_row(row_dict):
-    """Append one row to benchmark.csv, creating it with a header if needed."""
+    """Append one row to benchmark_table.csv, creating it with a header if needed."""
     exists = BENCHMARK_CSV.exists()
     with open(BENCHMARK_CSV, "a", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=_CSV_FIELDS, extrasaction="ignore")
@@ -77,14 +78,14 @@ def write_benchmark_row(row_dict):
 
 
 def print_benchmark_table():
-    """Read benchmark.csv and print a formatted table."""
+    """Read benchmark_table.csv and print a formatted table."""
     if not BENCHMARK_CSV.exists():
-        print("No benchmark.csv found.")
+        print("No benchmark_table.csv found.")
         return
     with open(BENCHMARK_CSV, newline="") as f:
         rows = list(csv.DictReader(f))
     if not rows:
-        print("benchmark.csv is empty.")
+        print("benchmark_table.csv is empty.")
         return
 
     fmt = (

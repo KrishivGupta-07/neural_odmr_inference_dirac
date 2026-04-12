@@ -4,10 +4,10 @@ Part 1C: Interpretability — Saliency, Occlusion & Synthetic Probes
 Run on Kaggle:  %run interpretability.py
 
 Requires:
-  - /kaggle/working/checkpoints/dilresnet_seed777.pt   (DilatedResNet1D weights)
-  - /kaggle/working/checkpoints/norm_params.json
-  - /kaggle/input/odmr-data/data/test.npz
-  - /kaggle/input/odmr-data/data/freq_axis.npy
+  - checkpoints/dilresnet_seed777.pt   (DilatedResNet1D weights)
+  - checkpoints/norm_params.json
+  - data/test.npz
+  - data/freq_axis.npy
 """
 
 import json
@@ -25,10 +25,11 @@ import matplotlib.pyplot as plt
 # PATHS
 # ═══════════════════════════════════════════════════════════════════════════
 
-DATA_DIR  = Path("/kaggle/input/datasets/krishivgupta123123/diraclab/data")
-CKPT_DIR  = Path("/kaggle/working/checkpoints")
-PLOT_DIR  = Path("/kaggle/working/plots")
-CKPT_PATH = CKPT_DIR / "dilresnet_seed777.pt" #best model
+REPO_ROOT = Path(__file__).parent.parent
+DATA_DIR  = REPO_ROOT / "data"
+CKPT_DIR  = REPO_ROOT / "checkpoints"
+PLOT_DIR  = Path(__file__).parent / "figures"
+CKPT_PATH = CKPT_DIR / "dilresnet_seed777.pt"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 D_GHZ  = 2.87

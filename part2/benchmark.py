@@ -4,26 +4,29 @@ import csv
 import sys
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(REPO_ROOT / "shared"))
+
 ROOT = Path(__file__).parent
-BENCHMARK_CSV = ROOT / "benchmark.csv"
+BENCHMARK_CSV = ROOT / "benchmark_table.csv"
 
 EXPECTED_FILES = [
-    "benchmark.csv",
-    "onnx/baseline_fp32.onnx",
-    "onnx/v1_ptq_int8.onnx",
-    "onnx/v2_student_fp32.onnx",
-    "onnx/v3_student_int8.onnx",
-    "onnx/v4_pruned70.onnx",
+    "part2/benchmark_table.csv",
+    "part2/models/baseline_fp32.onnx",
+    "part2/models/v1_ptq_int8.onnx",
+    "part2/models/v2_student_fp32.onnx",
+    "part2/models/v3_student_int8.onnx",
+    "part2/models/v4_pruned70.onnx",
     "checkpoints/v2_student_best.pt",
     "checkpoints/v4_pruned70_best.pt",
     "checkpoints/v5b_scratch_student.pt",
-    "plots/pareto_mae_vs_size.png",
-    "plots/pareto_mae_vs_latency.png",
-    "plots/compression_scores.png",
-    "plots/forensics_error_cdf.png",
-    "plots/forensics_error_vs_b.png",
-    "plots/forensics_quant_noise.png",
-    "plots/forensics_distillation_saliency.png",
+    "part2/figures/pareto_mae_vs_size.png",
+    "part2/figures/pareto_mae_vs_latency.png",
+    "part2/figures/compression_scores.png",
+    "part2/figures/forensics_error_cdf.png",
+    "part2/figures/forensics_error_vs_b.png",
+    "part2/figures/forensics_quant_noise.png",
+    "part2/figures/forensics_distillation_saliency.png",
 ]
 
 
@@ -141,7 +144,7 @@ def check_files(out):
     out.write("=" * 70 + "\n")
     all_ok = True
     for rel in EXPECTED_FILES:
-        exists = (ROOT / rel).exists()
+        exists = (REPO_ROOT / rel).exists()
         mark = "✓" if exists else "✗"
         out.write(f"  [{mark}] {rel}\n")
         if not exists:
@@ -155,9 +158,8 @@ def check_files(out):
 
 def main():
     rows = load_rows()
-    report_path = ROOT / "compression_report.txt"
+    report_path = REPO_ROOT / "compression_report.txt"
 
-    # Write to both stdout and file
     with open(report_path, "w") as f:
         class Tee:
             def write(self, s):

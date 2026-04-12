@@ -7,7 +7,8 @@ import torch
 from scipy.ndimage import gaussian_filter1d
 
 
-DATA_DIR = Path(__file__).parent / "data"
+REPO_ROOT = Path(__file__).parent.parent
+DATA_DIR = REPO_ROOT / "data"
 
 
 def preprocess_spectra(spectra_np: np.ndarray, sigma: float = 4.0) -> np.ndarray:

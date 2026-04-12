@@ -1,6 +1,0 @@
-tag,mae_ut,max_err_ut,r2,params,size_kb,latency_ms,score,notes
-Baseline (FP32 PyTorch),561.3,—,0.8551,186529,764.9,1.990,1.00,ResNet1D base_ch=32
-V1 PTQ INT8,563.0,6628.8,0.8484,186529,712.4,0.442,4.82,ONNX dynamic quant QInt8
-V2 Distilled Student,571.4,6726.0,0.8462,12073,53.2,0.087,322.35,"TinyResNet1D base_ch=8, KD alpha=0.6"
-V3 Student+INT8,571.7,6721.3,0.8462,12073,56.2,0.103,257.98,TinyResNet1D + ONNX dynamic QInt8
-V4 Pruned 70%,561.6,7140.3,0.8486,57303,732.0,0.477,4.36,70% global L1 pruning + 30ep finetune. Theoretical=223.8KB

@@ -2,6 +2,7 @@
 
 import csv
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -13,6 +14,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+REPO_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(REPO_ROOT / "shared"))
+
 from dataset import load_filtered
 from models import ResNet1D, TinyResNet1D
 from utils import (
@@ -21,10 +25,9 @@ from utils import (
     write_benchmark_row, print_benchmark_table,
 )
 
-PLOT_DIR = Path(__file__).parent / "plots"
-
-CKPT_DIR = Path(__file__).parent / "checkpoints"
-ONNX_DIR = Path(__file__).parent / "onnx"
+PLOT_DIR = Path(__file__).parent / "figures"
+CKPT_DIR = REPO_ROOT / "checkpoints"
+ONNX_DIR = Path(__file__).parent / "models"
 BASELINE_CKPT = CKPT_DIR / "resnet_smooth_seed42_best.pt"
 
 
@@ -139,7 +142,6 @@ def variant1_ptq_int8(test_spec, test_targets):
           f"Latency={lat_ms:.3f} ms | S={s:.2f}")
 
     # ── 5. Write to benchmark ──
-    from utils import BENCHMARK_CSV
     if not BENCHMARK_CSV.exists():
         write_benchmark_row(dict(
             tag="Baseline (FP32 PyTorch)",

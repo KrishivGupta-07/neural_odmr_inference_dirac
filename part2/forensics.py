@@ -1,6 +1,7 @@
 """Part 2 — Forensic investigations on compressed models."""
 
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -14,13 +15,16 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+REPO_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(REPO_ROOT / "shared"))
+
 from dataset import load_filtered, preprocess_spectra, DATA_DIR
 from models import ResNet1D, TinyResNet1D
 from utils import TARGET_MEAN, TARGET_STD, evaluate
 
-CKPT_DIR = Path(__file__).parent / "checkpoints"
-ONNX_DIR = Path(__file__).parent / "onnx"
-PLOT_DIR = Path(__file__).parent / "plots"
+CKPT_DIR = REPO_ROOT / "checkpoints"
+ONNX_DIR = Path(__file__).parent / "models"
+PLOT_DIR = Path(__file__).parent / "figures"
 PLOT_DIR.mkdir(parents=True, exist_ok=True)
 
 

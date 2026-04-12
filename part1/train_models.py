@@ -25,9 +25,10 @@ import matplotlib.pyplot as plt
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════════
 
-DATA_DIR = Path("/kaggle/input/datasets/krishivgupta123123/diraclab/data")
-CKPT_DIR = Path("/kaggle/working/checkpoints")
-PLOT_DIR = Path("/kaggle/working/plots")
+REPO_ROOT = Path(__file__).parent.parent
+DATA_DIR  = REPO_ROOT / "data"
+CKPT_DIR  = REPO_ROOT / "checkpoints"
+PLOT_DIR  = Path(__file__).parent / "figures"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 SEEDS = [42, 123, 777]

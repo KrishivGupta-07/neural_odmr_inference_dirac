@@ -13,9 +13,10 @@ from matplotlib.lines import Line2D
 from pathlib import Path
 from scipy.signal import find_peaks, savgol_filter
 
-DATA_DIR = Path(__file__).parent / "data"
-PLOTS_DIR = Path(__file__).parent / "plots"
-PLOTS_DIR.mkdir(exist_ok=True)
+REPO_ROOT = Path(__file__).parent.parent
+DATA_DIR  = REPO_ROOT / "data"
+PLOT_DIR  = Path(__file__).parent / "figures"
+PLOT_DIR.mkdir(exist_ok=True)
 
 NV_AXES = np.array([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]]) / np.sqrt(3)
 GAMMA_NV = 28.024  # GHz/T
@@ -99,7 +100,7 @@ def plot_spectra_grid(
         ax.tick_params(labelsize=7)
     axes[-1].set_xlabel("Frequency (GHz)", fontsize=9)
     fig.tight_layout()
-    out_path = PLOTS_DIR / "spectra_grid.png"
+    out_path = PLOT_DIR / "spectra_grid.png"
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"Saved {out_path}")
@@ -163,7 +164,7 @@ def plot_annotated_spectra(
     fig.legend(handles=legend_elements, loc="upper right", fontsize=8, ncol=3)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
 
-    out_path = PLOTS_DIR / "spectra_annotated.png"
+    out_path = PLOT_DIR / "spectra_annotated.png"
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"Saved {out_path}")
@@ -201,12 +202,12 @@ def plot_dip_vs_B(
     ax.legend(fontsize=9)
     fig.tight_layout()
 
-    out_path = PLOTS_DIR / "dip_splitting.png"
+    out_path = PLOT_DIR / "dip_splitting.png"
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"Saved {out_path}")
 
-    out_path = PLOTS_DIR / "dip_positions_vs_B.png"
+    out_path = PLOT_DIR / "dip_positions_vs_B.png"
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"Saved {out_path}")
@@ -253,7 +254,7 @@ def plot_distributions(train_data: np.lib.npyio.NpzFile) -> None:
 
     fig.suptitle("Training Set Parameter Distributions", fontsize=13)
     fig.tight_layout()
-    out_path = PLOTS_DIR / "distributions.png"
+    out_path = PLOT_DIR / "distributions.png"
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"Saved {out_path}")
@@ -274,7 +275,7 @@ def plot_distributions(train_data: np.lib.npyio.NpzFile) -> None:
     plt.colorbar(sc2, ax=axes[1], label="Count")
 
     fig.tight_layout()
-    out_path = PLOTS_DIR / "hard_regime.png"
+    out_path = PLOT_DIR / "hard_regime.png"
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"Saved {out_path}")
@@ -330,7 +331,7 @@ def analyze_overlap(train_data: np.lib.npyio.NpzFile) -> None:
     ax.set_title("Overlap regime: ground-truth dip separation < linewidth")
     ax.legend()
     fig.tight_layout()
-    out_path = PLOTS_DIR / "overlap_regime.png"
+    out_path = PLOT_DIR / "overlap_regime.png"
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"Saved {out_path}")

@@ -7,17 +7,17 @@ BENCHMARK TABLE
   Variant                       MAE(μT)    MaxErr(μT)       R²   Params   Size(KB)  Latency(ms)  Score S
   ------------------------------------------------------------------------------------------------------
   Baseline (FP32 PyTorch)         561.3             —   0.8551   186529      764.9        1.990     1.00
-  V1 PTQ INT8                     563.0        6628.8   0.8484   186529      712.4        0.442     4.82
-  V2 Distilled Student            571.4        6726.0   0.8462    12073       53.2        0.087   322.35
-  V3 Student+INT8                 571.7        6721.3   0.8462    12073       56.2        0.103   257.98
-  V4 Pruned 70%                   561.6        7140.3   0.8486    57303      732.0        0.477     4.36
+  V1 PTQ INT8                     563.0        6628.8   0.8484   186529      712.4        0.486     4.39
+  V2 Distilled Student            571.4        6726.0   0.8462    12073       53.2        0.143   196.26
+  V3 Student+INT8                 571.7        6721.3   0.8462    12073       56.2        0.154   172.25
+  V4 Pruned 70%                   557.8        7003.1   0.8478    57303      732.0        0.466     4.49
 
 
 COMPRESSION FINDINGS
 ======================================================================
-  Best compression score:    V2 Distilled Student  S=322
+  Best compression score:    V2 Distilled Student  S=196
   Best size reduction:       V2  764.9→53.2 KB  (14.4x)
-  Best latency reduction:    V2  1.99→0.087 ms (22.9x)
+  Best latency reduction:    V2  1.99→0.143 ms (13.9x)
   MAE degradation (best):    V2  561.3→571.4 μT (+1.8%)
 
   Pareto-optimal variants:   Baseline, V1, V2, V4
@@ -43,13 +43,13 @@ COMPRESSION SCORE EXPLANATION
     too small to benefit from INT8 MatMul. Architecture reduction
     dominates quantization at this scale.
 
-  Why V4 (Pruning) scores only 4.4:
+  Why V4 (Pruning) scores only 4.5:
     Unstructured magnitude pruning creates zero weights but they remain
     stored in the ONNX graph. No size reduction, modest latency gain
     from ORT skipping near-zero multiplications. Structured pruning
     or sparse tensor formats would be required to realize size savings.
 
-  Why V1 (PTQ INT8) scores only 4.8:
+  Why V1 (PTQ INT8) scores only 4.4:
     Dynamic quantization only affects MatMul/Gemm ops (the linear head).
     Conv weights — 95% of parameters — remain FP32 in ONNX dynamic quant.
     Score comes from ORT graph optimization, not quantization itself.
@@ -57,21 +57,21 @@ COMPRESSION SCORE EXPLANATION
 
 OUTPUT FILE CHECKLIST
 ======================================================================
-  [✓] benchmark.csv
-  [✓] onnx/baseline_fp32.onnx
-  [✓] onnx/v1_ptq_int8.onnx
-  [✓] onnx/v2_student_fp32.onnx
-  [✓] onnx/v3_student_int8.onnx
-  [✓] onnx/v4_pruned70.onnx
+  [✓] part2/benchmark_table.csv
+  [✓] part2/models/baseline_fp32.onnx
+  [✓] part2/models/v1_ptq_int8.onnx
+  [✓] part2/models/v2_student_fp32.onnx
+  [✓] part2/models/v3_student_int8.onnx
+  [✓] part2/models/v4_pruned70.onnx
   [✓] checkpoints/v2_student_best.pt
   [✓] checkpoints/v4_pruned70_best.pt
   [✓] checkpoints/v5b_scratch_student.pt
-  [✓] plots/pareto_mae_vs_size.png
-  [✓] plots/pareto_mae_vs_latency.png
-  [✓] plots/compression_scores.png
-  [✓] plots/forensics_error_cdf.png
-  [✓] plots/forensics_error_vs_b.png
-  [✓] plots/forensics_quant_noise.png
-  [✓] plots/forensics_distillation_saliency.png
+  [✓] part2/figures/pareto_mae_vs_size.png
+  [✓] part2/figures/pareto_mae_vs_latency.png
+  [✓] part2/figures/compression_scores.png
+  [✓] part2/figures/forensics_error_cdf.png
+  [✓] part2/figures/forensics_error_vs_b.png
+  [✓] part2/figures/forensics_quant_noise.png
+  [✓] part2/figures/forensics_distillation_saliency.png
 
   All 16 files present.
